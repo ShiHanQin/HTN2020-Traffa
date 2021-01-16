@@ -7,13 +7,13 @@ const socket = io("http://localhost:3001")
 
 
 const Landing = ({}) => {
-    const [name, setName] = useState('');
+    const [code, setCode] = useState('');
 
     useEffect(() => {
     }, [])  
     
 
-    const handleSubmitName = () => {
+    const handleSubmitCode = () => {
         //do stuff w name
         socket.emit('createlobby', 'testlobby')
         socket.emit('createlobby', 'testlobby2')
@@ -25,11 +25,11 @@ const Landing = ({}) => {
         //userAction - userjoin, createLobby, etc.
 
 
-        console.log(name);
+        console.log(code);
     }
 
-    const handleNameChange = ({target: {value}}) => {
-        setName(value);
+    const handleCodeChange = ({target: {value}}) => {
+        setCode(value);
     }
 
     return (
@@ -38,11 +38,11 @@ const Landing = ({}) => {
             <h1>
                 Traffa
             </h1>
-            <NameInput onChange={handleNameChange} placeholder="Enter a name">
+            <CodeInput onChange={handleCodeChange} placeholder="Enter a room code">
                 
-            </NameInput>
+            </CodeInput>
             <LandingButton>
-                <ButtonLink to={"/nameScreen/" + name} /*TEMPORARY*/ onClick={handleSubmitName}>Enter</ButtonLink>
+                <ButtonLink to={"/nameScreen/" + code} /*TEMPORARY*/ onClick={handleSubmitCode}>Enter</ButtonLink>
             </LandingButton>
 
             <LandingButton>
@@ -54,7 +54,7 @@ const Landing = ({}) => {
     );
 };
 
-const NameInput = styled.input`
+const CodeInput = styled.input`
     line-height: 32px;
     width: 222px;
 `;

@@ -50,8 +50,4 @@ const createRoom = (io, users, room, endRoom) => {
     return true;
 }
 
-const endRoom = () => {
-
-}
-
-module.exports = { createRoom, endRoom };
+module.exports = { createRoom };

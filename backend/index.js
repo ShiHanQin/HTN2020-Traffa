@@ -18,13 +18,8 @@ const { SERVER_PORT } = process.env;
 
 io.on('connection', (socket) => {
     /* HOST ACTIONS */
-    // End all in-progress rooms and return all users to the waiting area
-    socket.on('endcalls', (lobbyCode) => {
-        const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
-        LobbyToModify.endRooms();
 
-    })
-
+        
     // Create lobby with unique code so that other users can join
     socket.on('createlobby', (lobbyCode) => {
         socket.join(lobbyCode);
@@ -34,16 +29,24 @@ io.on('connection', (socket) => {
     });
 
     // Pair all users in lobby and start networking
-    socket.on('startapp', () => {
+    socket.on('startapp', (lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
         LobbyToModify.createRooms();
     })
 
-    socket.on('hostleave', () => {
+    // End all active 1on1 rooms (Pushes all users back to waiting area)
+    socket.on('endrooms', (lobbyCode) => {
+        const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
+        LobbyToModify.endRooms();
+    })
 
-    });
+    // Close lobby
+    socket.on('endlobby', (lobbyCode) => {
+        const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
+        LobbyToModify.endLobby();
+    })
 
-
+    
     /* GLOBAL ACTIONS */
     // Provide information about number of users that are connected for the given lobby
     socket.on('usersconnected', (lobbyCode) => {
@@ -55,11 +58,18 @@ io.on('connection', (socket) => {
 
     // Add user to lobby that was specified
     socket.on('userjoin', (user_id, lobbyCode) => {
-        socket.join(lobbyCode)
-
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
-        LobbyToModify.addUserToLobby(io, user_id, socket);
 
+        if (!LobbyToModify) {
+            console.log(`Lobby with specified code ${lobbyCode} does not exist!`)
+            io.to(socket.id).emit('exception', {errorMessage: 'Room does not exist!', error: true})
+        } else {
+            socket.join(lobbyCode)
+            LobbyToModify.addUserToLobby(io, user_id, socket);
+            const numOfUsers = LobbyToModify.getNumberOfUsers();
+            io.to(lobbyCode).emit('numofusers', numOfUsers);
+            io.to(lobbyCode).emit('message', {message: `${user_id} joined!`});
+        }
     });
 
     // Allow user to change nickname stored
@@ -69,13 +79,18 @@ io.on('connection', (socket) => {
 
     });
 
-
-    socket.on('userleave', () => {
-
+    socket.on('userleave', (user_id, lobbyCode) => {
+        const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
+        LobbyToModify.userLeave(user_id, lobbyCode);
+        
+        const numOfUsers = LobbyToModify.getNumberOfUsers();
+        io.to(lobbyCode).emit('numofusers', numOfUsers);
+        socket.leave(lobbyCode);
     });
     
     socket.on('disconnect', (lobbyCode) => {
-        connection = false;
+
+
     });
 });
 

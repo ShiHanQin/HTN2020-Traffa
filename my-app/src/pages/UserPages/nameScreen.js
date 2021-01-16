@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import styled from "styled-components";
 import { BrowserRouter as Route, Link } from "react-router-dom";
 
@@ -14,18 +14,24 @@ const NameScreen = ({}) => {
        setName(value);
     };
 
+    const history = useHistory();
+
     return (
         <NameScreenBody>
             <NameScreenDiv>
-                <h1>Room: {code}!</h1>
+
+                <h1>Room: {code}</h1>
+
+                <NameInput
+                    onChange={handleNameChange}
+                    placeholder="Choose a username"
+                ></NameInput>
+
+                <LobbyButton onClick={() => history.push('potato')}>
+                    Enter
+                </LobbyButton> 
+
             </NameScreenDiv>
-            <NameInput
-                onChange={handleNameChange}
-                placeholder="Choose a username"
-            ></NameInput>
-            <LobbyButton> 
-                <ButtonLink to="/lobby">Enter</ButtonLink>
-            </LobbyButton> 
         </NameScreenBody>
     );
 };

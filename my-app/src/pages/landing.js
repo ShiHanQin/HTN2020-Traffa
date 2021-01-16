@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { io } from 'socket.io-client';
 import styled from "styled-components";
-import { BrowserRouter as Route, Link } from "react-router-dom";
+import { useHistory, BrowserRouter as Route, Link } from "react-router-dom";
 
 const socket = io("http://localhost:3001")
 
@@ -12,18 +12,36 @@ const Landing = ({}) => {
     useEffect(() => {
     }, [])  
     
+    const history = useHistory();
 
     const handleSubmitCode = () => {
         //do stuff w name
         socket.emit('createlobby', 'testlobby')
-        socket.emit('createlobby', 'testlobby2')
+        socket.emit('userjoin', code, 'testlobby');
+        
+        socket.on('numofusers', (msg) => {
+            console.log(msg)
+        })
 
-        socket.emit('userjoin', 'user', 'testlobby')
-        socket.emit('userjoin', 'user2', 'testlobby')
-        socket.emit('userjoin', 'user3', 'testlobby')
+        socket.on('exception', (msg) => {
+            if (!msg.error){
+                console.log("o_o");
+            } else {
+                console.log(msg);
+                console.log("I eat noobs");
+            }
+        });
+        
+        socket.on('message', (msg) => {
+            console.log(msg)
+        })
+
+        
         //socket.emit(userAction, generatedUserId, generatedLobbyCode)
         //userAction - userjoin, createLobby, etc.
+        console.log('grief?');
 
+        history.push("/nameScreen/" + code);
 
         console.log(code);
     }
@@ -41,8 +59,8 @@ const Landing = ({}) => {
             <CodeInput onChange={handleCodeChange} placeholder="Enter a room code">
                 
             </CodeInput>
-            <LandingButton>
-                <ButtonLink to={"/nameScreen/" + code} /*TEMPORARY*/ onClick={handleSubmitCode}>Enter</ButtonLink>
+            <LandingButton onClick={handleSubmitCode} >
+                Enter
             </LandingButton>
 
             <LandingButton>

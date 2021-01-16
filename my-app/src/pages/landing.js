@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { io } from 'socket.io-client';
+import React, { useState, useEffect, useContext } from "react";
+import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
+import { socket } from '../utils/index'
 import { useHistory, BrowserRouter as Route, Link } from "react-router-dom";
-
-const socket = io("http://localhost:3001")
-
+import { UserContext } from '../context/user';
 
 const Landing = ({}) => {
     const [code, setCode] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const context = useContext(UserContext);
 
     useEffect(() => {
     }, [])  
@@ -15,35 +16,23 @@ const Landing = ({}) => {
     const history = useHistory();
 
     const handleSubmitCode = () => {
-        //do stuff w name
-        socket.emit('createlobby', 'testlobby')
-        socket.emit('userjoin', code, 'testlobby');
-        
-        socket.on('numofusers', (msg) => {
-            console.log(msg)
-        })
+        const userId = uuidv4().slice(0, 6).toUpperCase();
 
-        socket.on('exception', (msg) => {
-            if (!msg.error){
-                console.log("o_o");
+        //do stuff w name
+        socket.emit('userjoin', userId, code);
+
+        socket.once('userJoinStatus', (status) => {
+            if (!status.error){
+                history.push("/nameScreen/" + code);
+                context.userId.setValue(userId);
+                context.roomCode.setValue(code)
             } else {
-                console.log(msg);
-                console.log("I eat noobs");
+                setErrorMessage(status.errorMessage)
             }
         });
-        
-        socket.on('message', (msg) => {
-            console.log(msg)
-        })
 
-        
         //socket.emit(userAction, generatedUserId, generatedLobbyCode)
         //userAction - userjoin, createLobby, etc.
-        console.log('grief?');
-
-        history.push("/nameScreen/" + code);
-
-        console.log(code);
     }
 
     const handleCodeChange = ({target: {value}}) => {
@@ -64,9 +53,9 @@ const Landing = ({}) => {
             </LandingButton>
 
             <LandingButton>
-                <ButtonLink to="/hostDashboard">Host</ButtonLink>
+                <ButtonLink to="/creationDashboard">Host</ButtonLink>
             </LandingButton>
-
+            <ErrorMessage>{errorMessage && errorMessage}</ErrorMessage>
         </LandingDiv>
     </LandingBody>
     );
@@ -104,6 +93,10 @@ flex-direction: column;
 justify-content: center;
 height: 100%;
 `;
+
+const ErrorMessage = styled.h3`
+    color: red;
+`
 
 export default Landing;
 

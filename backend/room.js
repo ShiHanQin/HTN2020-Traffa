@@ -14,6 +14,10 @@ const createRoom = (io, users, room, endRoom) => {
         }
     })
 
+    let token = session.generateToken({
+        role: 'publisher',
+    })
+
     users.forEach((user, index) => {
         const otherUser = index ? users[0] : users[1];
 
@@ -24,7 +28,11 @@ const createRoom = (io, users, room, endRoom) => {
         user.socket.join(room);
 
         // Pass the session Id for the Vonage Video Conference to the client
-        io.to(user.socket.id).emit('joinroom', otherUser.nickname, sessionId);
+        io.to(user.socket.id).emit('joinedroom', {
+            otherUser: otherUser.nickname, 
+            sessionId,
+            token,
+        });
 
         // Handle chat messages
         user.socket.on('sendChatMsg', chat)

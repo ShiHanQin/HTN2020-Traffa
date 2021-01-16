@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import { useParams, useHistory } from 'react-router-dom';
+import { socket } from '../../utils/index'
 import styled from "styled-components";
 import { BrowserRouter as Route, Link } from "react-router-dom";
+import { UserContext } from '../../context/user';
 
 const NameScreen = ({}) => {
     let { code } = useParams(); //TEMPORARY
 
     const [name, setName] = useState("");
+    const context = useContext(UserContext);
 
-    useEffect(() => {}, []);  
+    useEffect(() => {
+        
+    }, []);  
 
     const handleNameChange = ({ target: { value } }) => {
        setName(value);
     };
 
+    const submitName = () => {
+        const userId = context.userId.value;
+        const roomCode = context.roomCode.value;
+
+        socket.emit('chooseName', userId, name, roomCode);
+        history.push('/lobby/' + roomCode)
+    }
+    
     const history = useHistory();
 
     return (
@@ -27,7 +40,7 @@ const NameScreen = ({}) => {
                     placeholder="Choose a username"
                 ></NameInput>
 
-                <LobbyButton onClick={() => history.push('potato')}>
+                <LobbyButton onClick={submitName}>
                     Enter
                 </LobbyButton> 
 

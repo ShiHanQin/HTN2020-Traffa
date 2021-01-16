@@ -22,6 +22,7 @@ io.on('connection', (socket) => {
         
     // Create lobby with unique code so that other users can join
     socket.on('createlobby', (lobbyCode) => {
+        console.log(`${lobbyCode} created`)
         socket.join(lobbyCode);
         const newLobby = new Lobby(io, lobbyCode);
         
@@ -62,30 +63,44 @@ io.on('connection', (socket) => {
 
         if (!LobbyToModify) {
             console.log(`Lobby with specified code ${lobbyCode} does not exist!`)
-            io.to(socket.id).emit('exception', {errorMessage: 'Room does not exist!', error: true})
+            io.to(socket.id).emit('userJoinStatus', {errorMessage: 'Room does not exist!', error: true})
+
         } else {
             socket.join(lobbyCode)
             LobbyToModify.addUserToLobby(io, user_id, socket);
             const numOfUsers = LobbyToModify.getNumberOfUsers();
+
             io.to(lobbyCode).emit('numofusers', numOfUsers);
             io.to(lobbyCode).emit('message', {message: `${user_id} joined!`});
+            io.to(socket.id).emit('userJoinStatus', {errorMessage: '', error: false})
         }
     });
 
     // Allow user to change nickname stored
-    socket.on('choosename', (user_id, nickname) => {
+    socket.on('chooseName', (user_id, nickname, lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
         LobbyToModify.modifyNickname(user_id, nickname);
+        io.to(lobbyCode).emit('userjoined', LobbyToModify.getUsersInLobby())
 
     });
 
-    socket.on('userleave', (user_id, lobbyCode) => {
+    socket.on('reconnect', (user_id, lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
-        LobbyToModify.userLeave(user_id, lobbyCode);
         
-        const numOfUsers = LobbyToModify.getNumberOfUsers();
-        io.to(lobbyCode).emit('numofusers', numOfUsers);
-        socket.leave(lobbyCode);
+        if (LobbyToModify && LobbyToModify.isUserInLobby(user_id)){
+            socket.join(lobbyCode)
+            io.to(lobbyCode).emit('userjoined', LobbyToModify.getUsersInLobby())
+
+        }
+    })
+
+    socket.on('userleave', (user_id, lobbyCode) => {
+        // const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
+        // LobbyToModify.userLeave(user_id, lobbyCode);
+
+        // const numOfUsers = LobbyToModify.getNumberOfUsers();
+        // io.to(lobbyCode).emit('numofusers', numOfUsers);
+        // socket.leave(lobbyCode);
     });
     
     socket.on('disconnect', (lobbyCode) => {

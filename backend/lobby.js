@@ -12,6 +12,8 @@ class Lobby {
         this.getLobbyCode = this.getLobbyCode.bind(this);
         this.modifyNickname = this.modifyNickname.bind(this);
         this.addUserToLobby = this.addUserToLobby.bind(this);
+        this.isUserInLobby = this.isUserInLobby.bind(this);
+        this.getUsersInLobby = this.getUsersInLobby.bind(this);
         this.endLobby = this.endLobby.bind(this);
         this.createRooms = this.createRooms.bind(this);
         this.endRoom = this.endRoom.bind(this);
@@ -22,7 +24,7 @@ class Lobby {
     }
 
     modifyNickname = (user_id, nickname) => {
-        const user = this.userInLobby.find(element => (element === user_id));
+        const user = this.userInLobby.find(element => (element.id === user_id));
 
         if (!user) {
             console.log("error, user does not exist");
@@ -42,15 +44,36 @@ class Lobby {
     addUserToLobby = (io, user_id, socket) => {
         this.userInLobby.push({
             io: io,
+            socket_id: socket.id,
             id: user_id,
-            nickname: "",
+            nickname: "default",
             usersAlreadyMatched: [],
             socket: socket
         });  
     };
+
+    isUserInLobby = (user_id) => {
+        return this.userInLobby.find((user) => user.id === user_id);
+    }
+
+    getUsersInLobby = () => {
+
+        let nickUsers = [];
+        for (let i = 0; i < this.userInLobby.length; i++) {
+
+            if (this.userInLobby[i].nickname == 'default') {
+                continue;
+            }
+            else {
+                nickUsers.push(this.userInLobby[i].nickname);
+            }
+        }
+
+        return nickUsers;
+    }
     
     createRooms = () => {
-        for (i = 0; i < this.userInLobby.length; i++) {
+        for (let i = 0; i < this.userInLobby.length; i++) {
             let matchStatus = this.usersInWaitingArea.find(element => (element === this.usersInWaitingArea[i].user_id)); 
             let matchStatusTwo = this.usersInWaitingArea.find(element => (element === this.usersInWaitingArea[i+1].user_id)); 
             if ((!matchStatus) && (!matchStatusTwo)) {

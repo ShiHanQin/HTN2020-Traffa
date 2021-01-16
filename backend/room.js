@@ -10,7 +10,7 @@ const createRoom = (io, users, room, endRoom) => {
             console.log(`Error creating session: ${error}`);
         } else {
             sessionId = session.sessionId;
-            console.log(`Created session between ${users[0]} and ${users[1]} with session ${sessionId}`);
+            console.log(`Created Vonage Video session between ${users[0]} and ${users[1]} with session ${sessionId}`);
         }
     })
 
@@ -40,9 +40,8 @@ const createRoom = (io, users, room, endRoom) => {
         }
 
         const userLeave = () => {
-            removeSocketListeners();
-            user.socket.leave(room);
-            endRoom(room);
+            removeSocketListeners()
+            endRoom(room)
         }
 
     

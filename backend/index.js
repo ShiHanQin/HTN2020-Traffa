@@ -26,9 +26,15 @@ io.on('connection', (socket) => {
         socket.join(lobbyCode)
 
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
-        LobbyToModify.addUserToLobby(user_id, socket);
+        LobbyToModify.addUserToLobby(io, user_id, socket);
 
     });
+
+    socket.on('endcalls', (lobbyCode) => {
+        const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
+        LobbyToModify.endRooms();
+
+    })
 
     socket.on('startapp', () => {
 

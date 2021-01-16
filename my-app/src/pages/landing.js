@@ -3,8 +3,16 @@ import styled from "styled-components";
 import { BrowserRouter as Route, Link } from "react-router-dom";
 
 const Landing = ({}) => {
-    const [isValid, setIsValid] = useState(true);
+    const [name, setName] = useState('');
 
+    const handleSubmitName = () => {
+        //do stuff w name
+        console.log(name);
+    }
+
+    const handleNameChange = ({target: {value}}) => {
+        setName(value);
+    }
 
     return (
     <LandingBody>
@@ -12,30 +20,41 @@ const Landing = ({}) => {
             <h1>
                 Traffa
             </h1>
+            <NameInput onChange={handleNameChange} placeholder="Enter a name">
+                
+            </NameInput>
+            <LandingButton onClick={handleSubmitName}>
+                <ButtonLink to="/nameScreen">Enter</ButtonLink>
+            </LandingButton>
 
-                <EnterButton>
-                    <Link to="/nameScreen">Enter</Link>
-                </EnterButton>
-
-                <HostButton>
-                    <Link to="/hostDashboard">Host</Link>
-                </HostButton>
+            <LandingButton>
+                <ButtonLink to="/hostDashboard">Host</ButtonLink>
+            </LandingButton>
 
         </LandingDiv>
     </LandingBody>
     );
 };
 
+const NameInput = styled.input`
+    line-height: 32px;
+    width: 222px;
+`;
+
 const ButtonLink = styled(Link)`
-    
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
 `;
 
-const HostButton = styled.button`
+const LandingButton = styled.button`
     padding: 10px;
-`;
-
-const EnterButton = styled.button`
-    padding: 10px;
+    border: none;
+    background: #ed7d3a;
+    border-radius: 8px;
+    margin: 8px;
+    width: 230px;
 `;
 
 const LandingBody = styled.div`

@@ -32,8 +32,9 @@ class Lobby {
         return this.lobbyCode;
     }
 
-    addUserToLobby = (user_id, socket) => {
+    addUserToLobby = (io, user_id, socket) => {
         this.userInLobby.push({
+            io: io,
             id: user_id,
             nickname: "",
             usersAlreadyMatched: [],
@@ -42,19 +43,41 @@ class Lobby {
     };
     
     createRooms = () => {
-        for (i = 0; i < this.userInLobby.length; i+2) {
-            this.usersAlreadyMatched.find(element => (element === this.userInLobby[i].user_id));
-            this.activeRooms.push({
-                createRoom(placeholder, [this.userInLobby[i], this.userInLobby])
-            })
-        }
+        for (i = 0; i < this.userInLobby.length; i++) {
+            let matchStatus = this.usersAlreadyMatched.find(element => (element === this.userInLobby[i].user_id)); 
+            let matchStatusTwo = this.usersAlreadyMatched.find(element => (element === this.userInLobby[i+1].user_id)); 
+            if ((matchStatus) && (matchStatusTwo)) {
+                i += 1;
+                continue;
+            }
+            else if ((matchStatus) && (!matchStatusTwo)) {
+                continue;      
+            }
+            else if ((!matchStatus) && (matchStatusTwo)) {
+                let temp = this.userInLobby[i];
+                this.userInLobby[i] = this.userInLobby[i+1];
+                this.userInLobby[i+1] = temp;
+                continue;
+            }
+            else if ((!matchStatus) && (!matchStatusTwo)) {
+                let matches = [this.userInLobby[i], this.userInLobby[i+1]];
+                let roomString = String(this.userInLobby[i].user_id) + String(this.userInLobby[i+1].user_id);
+                createRoom(this.io, matches, roomString);
 
+                this.activeRooms.push(roomString);
+            }
+        }
     }
 
+    endRooms = () => {
+        this.userInLobby.forEach((user) => {
+            io.to(user.socket.id).emit('end')
+        })
+    }
 
-    
-    
-
+    endRoom = (room) => {
+        this.activeRooms = this.activeRooms.filter((activeRoom) => activeRoom != room);
+    }
 
 }
 

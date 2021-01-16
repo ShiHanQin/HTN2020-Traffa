@@ -4,13 +4,14 @@ const opentok = new OpenTok(OPENTOK_API_KEY, OPENTOK_API_SECRET);
 
 const createRoom = (io, users, room, endRoom) => {
     let sessionId;
+
     // Create a video conference session with Vonage API for the two users
     opentok.createSession({mediaMode: "route"}, (error, session) => {
         if (error) {
             console.log(`Error creating session: ${error}`);
         } else {
             sessionId = session.sessionId;
-            console.log(`Created session between ${users[0]} and ${users[1]} with session ${sessionId}`);
+            console.log(`Created Vonage Video session between ${users[0]} and ${users[1]} with session ${sessionId}`);
         }
     })
 

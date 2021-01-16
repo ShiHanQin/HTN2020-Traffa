@@ -40,8 +40,9 @@ const createRoom = (io, users, room, endRoom) => {
         }
 
         const userLeave = () => {
-            removeSocketListeners()
-            endRoom(room)
+            removeSocketListeners();
+            user.socket.leave(room);
+            endRoom(room);
         }
 
     

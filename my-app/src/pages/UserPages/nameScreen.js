@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import styled from "styled-components";
 
+
 const NameScreen = ({}) => {
+    let { name } = useParams(); //TEMPORARY
+
     return (
         <NameScreenBody>
             <NameScreenDiv>
-                <h1>Hi i'm NameScreen</h1>
+                <h1>Hi {name}, I'm dad</h1>
             </NameScreenDiv>
         </NameScreenBody>
     );

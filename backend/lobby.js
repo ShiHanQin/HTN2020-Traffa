@@ -10,28 +10,30 @@ class Lobby {
         this.getLobbyCode = this.getLobbyCode.bind(this);
         this.modifyNickname = this.modifyNickname.bind(this);
         this.addUserToLobby = this.addUserToLobby.bind(this);
-        this.endLobby = this.endLobby.bind(this);
-        this.createRooms = this.createRoom.bind(this);
+        // this.endLobby = this.endLobby.bind(this);
+        this.createRooms = this.createRooms.bind(this);
         this.endRoom = this.endRoom.bind(this);
         
     }
 
+    // Set nickname sent from the front-end
     modifyNickname = (user_id, nickname) => {
-        let index = this.userInLobby.find(element => (element === user_id));
-
-        if (typeof nickname !== 'undefined') {
-            console.log("error, user does not exist");
-        }
+        const user = this.userInLobby.find(element => (element === user_id));
         
-        else {
-            this.userInLobby[index].nickname = nickname;
+        // Check that user exists and modify username propety
+        if (!user){
+            console.log("Cannot find specified user")
+        } else {
+            user.nickname = nickname;
         }
     }
 
+    // Get lobby code to ensure correct lobby is joined
     getLobbyCode = () => {
         return this.lobbyCode;
     }
 
+    // Add user to the lobby when joining
     addUserToLobby = (io, user_id, socket) => {
         this.userInLobby.push({
             io: io,
@@ -70,9 +72,7 @@ class Lobby {
     }
 
     endRooms = () => {
-        this.userInLobby.forEach((user) => {
-            io.to(user.socket.id).emit('end')
-        })
+        this.io.to(this.lobbyCode).emit('closerooms')
     }
 
     endRoom = (room) => {

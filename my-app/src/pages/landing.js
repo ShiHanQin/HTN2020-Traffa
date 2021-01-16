@@ -1,12 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { io } from 'socket.io-client';
 import styled from "styled-components";
 import { BrowserRouter as Route, Link } from "react-router-dom";
+
+const socket = io("http://localhost:3001")
+
 
 const Landing = ({}) => {
     const [name, setName] = useState('');
 
+    useEffect(() => {
+    }, [])  
+    
+
     const handleSubmitName = () => {
         //do stuff w name
+        socket.emit('createlobby', 'testlobby')
+        socket.emit('createlobby', 'testlobby2')
+
+        socket.emit('userjoin', 'user', 'testlobby')
+        socket.emit('userjoin', 'user2', 'testlobby')
+        socket.emit('userjoin', 'user3', 'testlobby')
+        //socket.emit(userAction, generatedUserId, generatedLobbyCode)
+        //userAction - userjoin, createLobby, etc.
+
+
         console.log(name);
     }
 
@@ -23,8 +41,8 @@ const Landing = ({}) => {
             <NameInput onChange={handleNameChange} placeholder="Enter a name">
                 
             </NameInput>
-            <LandingButton onClick={handleSubmitName}>
-                <ButtonLink to="/nameScreen">Enter</ButtonLink>
+            <LandingButton>
+                <ButtonLink to={"/nameScreen/" + name} /*TEMPORARY*/ onClick={handleSubmitName}>Enter</ButtonLink>
             </LandingButton>
 
             <LandingButton>

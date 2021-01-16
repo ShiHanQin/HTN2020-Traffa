@@ -1,9 +1,15 @@
 require('dotenv').config();
-const express = require("express");
+const express = require('express');
+const cors = require('cors')
 
 const app = express();
 const http = require("http").Server(app);
-const io = require("socket.io")(http);
+const io = require("socket.io")(http, {
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST'],
+    }
+});
 
 const Lobby = require('./lobby.js');
 
@@ -13,13 +19,17 @@ const connection = false;
 const { SERVER_PORT } = process.env;
 
 io.on('connection', (socket) => {
-    connection = true;
+    console.log(`Connection from ${socket}`)
+
 
     socket.on('createlobby', (lobbyCode) => {
         socket.join(lobbyCode);
+        console.log(lobbyCode)
         const newLobby = new Lobby(io, lobbyCode);
         
         lobbies.push(newLobby);
+        console.log(lobbies)
+
     });
 
     socket.on('userjoin', (user_id, lobbyCode) => {
@@ -27,6 +37,8 @@ io.on('connection', (socket) => {
 
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
         LobbyToModify.addUserToLobby(io, user_id, socket);
+
+        console.log(lobbies)
 
     });
 
@@ -56,7 +68,6 @@ io.on('connection', (socket) => {
     });
     
     socket.on('disconnect', (lobbyCode) => {
-        connection = false;
     });
 });
 

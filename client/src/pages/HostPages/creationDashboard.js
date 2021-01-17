@@ -46,27 +46,40 @@ const CreationDashboard = ({}) => {
             <Col>
             <ParticipantDisplay>
                 <h1>Users Currently Joined:</h1>
-                    <ul className="list-group">
+                    <ParticipantList>
                         {joinedUsers && joinedUsers.map((user) => 
                             <li>{user}</li>
                         )}
-                        <ListGroup.Item action>LUl</ListGroup.Item>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
-                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
+                        <Participant>LUl</Participant>
                         
 
-                        </ul>
+                         {/* <li className="list-group-item list-group-item-action">LUL</li> */}
+                        {/* <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li>
+                        <li className="list-group-item list-group-item-action">LUL</li> */}
+
+                        </ParticipantList>
                 </ParticipantDisplay>
                 <Button variant="primary" onClick={startNetworking}>Start the session!</Button>{' '}
             </Col>
@@ -86,17 +99,20 @@ const CreationDashboard = ({}) => {
 };
 
 const ParticipantDisplay = styled.div`
-    height: 70vh;
+    display: block;
+    max-height: 315px;
 `;
 
 const Participant = styled(ListGroup.Item)`
-    cursor: none;
+    cursor: auto;
+    outline: none;
 `;
 
 const ParticipantList = styled(ListGroup)`
     overflow: hidden;
     overflow-y: scroll;
     list-style-position: inside;
+    max-height: 100%;
 `;
 
 const DashboardBody = styled(Container)`

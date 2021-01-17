@@ -3,6 +3,8 @@ import { UserContext } from "./context/user.js";
 import { Landing, RoomInterface, NameScreen, CreationDashboard, JoiningLobby, Lobby } from './pages/index.js';
 import { useSessionStorage } from "./utils/index.js";
 
+import GlobalStyle from './globalStyles'
+
 function App() {
   const [name, setName] = useSessionStorage("name", "");
   const [id, setId] = useSessionStorage("userId", "");
@@ -20,6 +22,7 @@ function App() {
         sessionId: {value: sessionId, setValue: setSessionId},
         token: {value: token, setValue: setToken}
       }}>
+      <GlobalStyle />
       <Router>
           <div>
           

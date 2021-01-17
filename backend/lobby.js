@@ -1,13 +1,15 @@
-const createRoom = require('./room.js')
+const { createRoom } = require('./room.js')
 
 class Lobby {
     constructor(io, lobbyCode) {
         this.io = io;
         this.lobbyCode = lobbyCode;
+        this.duration;
         this.userInLobby = [];
         this.usersInWaitingArea = [];
         this.activeRooms = [];
 
+        this.setDuration = this.setDuration.bind(this);
         this.getNumberOfUsers = this.getNumberOfUsers.bind(this);
         this.getLobbyCode = this.getLobbyCode.bind(this);
         this.modifyNickname = this.modifyNickname.bind(this);
@@ -17,6 +19,10 @@ class Lobby {
         this.endLobby = this.endLobby.bind(this);
         this.createRooms = this.createRooms.bind(this);
         this.endRoom = this.endRoom.bind(this);
+    }
+
+    setDuration = (duration) => {
+        this.duration = duration
     }
 
     getNumberOfUsers = () => {
@@ -30,6 +36,7 @@ class Lobby {
             console.log("error, user does not exist");
         } else {
             user.nickname = nickname;
+            this.usersInWaitingArea.push(user)
         }
     }
 
@@ -73,30 +80,40 @@ class Lobby {
     }
     
     createRooms = () => {
-        for (let i = 0; i < this.userInLobby.length; i++) {
-            let matchStatus = this.usersInWaitingArea.find(element => (element === this.usersInWaitingArea[i].user_id)); 
-            let matchStatusTwo = this.usersInWaitingArea.find(element => (element === this.usersInWaitingArea[i+1].user_id)); 
-            if ((!matchStatus) && (!matchStatusTwo)) {
-                i += 1;
-                continue;
-            }
-            else if ((!matchStatus) && (matchStatusTwo)) {
-                continue;      
-            }
-            else if ((matchStatus) && (!matchStatusTwo)) {
-                let temp = this.userInLobby[i];
-                this.userInLobby[i] = this.userInLobby[i+1];
-                this.userInLobby[i+1] = temp;
-                continue;
-            }
-            else if ((matchStatus) && (matchStatusTwo)) {
-                let matches = [this.userInLobby[i], this.userInLobby[i+1]];
-                let roomString = `${this.userInLobby[i].user_id}-${this.userInLobby[i+1].user_id}`;
-                createRoom(this.io, matches, roomString);
+        let availableUsers = this.usersInWaitingArea;
 
-                this.activeRooms.push(roomString);
+        if (availableUsers.length <= 1){
+            return;
+        }
+        
+        while (availableUsers.length > 0) {
+            if (availableUsers.length % 2 == 0 && availableUsers.length <= 3){
+                const randomAvailableUser = availableUsers[Math.floor(Math.random() * availableUsers.length)]
+                availableUsers = availableUsers.filter((user) => user.id !== randomAvailableUser.id);
+                const secondRandomAvailableUser = availableUsers[Math.floor(Math.random() * availableUsers.length)]
+                availableUsers = availableUsers.filter((user) => user.id !== secondRandomAvailableUser.id);
+
+                let matches = [randomAvailableUser, secondRandomAvailableUser];
+                let roomString = `${randomAvailableUser.id}-${secondRandomAvailableUser.id}`;
+
+                createRoom(this.io, matches, roomString)
+                this.activeRooms.push(roomString)
+            } else {
+                const randomAvailableUser = availableUsers[Math.floor(Math.random() * availableUsers.length)];
+                availableUsers = availableUsers.filter((user) => user.id !== randomAvailableUser.id);
+                const secondRandomAvailableUser = availableUsers[Math.floor(Math.random() * availableUsers.length)];
+                availableUsers = availableUsers.filter((user) => user.id !== secondRandomAvailableUser.id);
+                const thirdRandomAvailableUser = availableUsers[Math.floor(Math.random() * availableUsers.length)];
+                availableUsers = availableUsers.filter((user) => user.id !== thirdRandomAvailableUser.id);
+
+                let matches = [randomAvailableUser, secondRandomAvailableUser, thirdRandomAvailableUser];
+                let roomString = `${randomAvailableUser.id}-${secondRandomAvailableUser.id}`;
+
+                createRoom(this.io, matches, roomString)
+                this.activeRooms.push(roomString)
             }
         }
+
     }
 
     userLeave = (user_id, lobbyCode) => {

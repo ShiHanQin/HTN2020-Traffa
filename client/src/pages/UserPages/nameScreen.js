@@ -11,10 +11,6 @@ const NameScreen = ({}) => {
     const [name, setName] = useState("");
     const context = useContext(UserContext);
 
-    useEffect(() => {
-        
-    }, []);  
-
     const handleNameChange = ({ target: { value } }) => {
        setName(value);
     };
@@ -22,7 +18,6 @@ const NameScreen = ({}) => {
     const submitName = () => {
         const userId = context.userId.value;
         const roomCode = context.roomCode.value;
-
         socket.emit('chooseName', userId, name, roomCode);
         history.push('/lobby/' + roomCode)
     }

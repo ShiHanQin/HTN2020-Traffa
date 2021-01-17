@@ -3,10 +3,13 @@ import styled from "styled-components";
 import { socket } from '../../utils/index'
 import { QuestionForm } from "../index";
 import { v4 as uuidv4 } from "uuid";
+import { Container } from 'react-bootstrap';
+import './dashboard.css'
 
 const CreationDashboard = ({}) => {
     const [questionsArr, setQuestionsArr] = useState([])
     const [lobbyCode, setLobbyCode] = useState(uuidv4().slice(0, 6).toUpperCase())
+    const [roomDuration, setRoomDuration] = useState()
     const [joinedUsers, setJoinedUsers] = useState([])
 
     useEffect(() => {
@@ -18,23 +21,23 @@ const CreationDashboard = ({}) => {
         })
     }, [])
 
+    const startNetworking = () => {
+        socket.emit('startapp', lobbyCode)
+    }
+
+    const setDuration = () => {
+        socket.emit('setRoomDuration', roomDuration)
+    }
+
     const handleSaveOptions = () => {
         //sendState()
     }
 
     return (
-        <CreationDashBody>
-            <CreationDashDiv>
-                <h1>Welcome to the Host Dashboard</h1>
-                <h1>Lobby Code: {lobbyCode}</h1> {/* should autogenerate */}
-                <QuestionForm />
-                {/* <div className="input-group">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text" id="">Question and Duration (seconds)</span>
-                    </div>
-                    <input type="text" className="form-control"></input>
-                    <input type="text" className="form-control"></input>
-                </div>  */}
+        <div class="container">
+            
+            <div class="container">
+
                 <div>
                     Users Currently Joined:
                     <ul>
@@ -43,21 +46,20 @@ const CreationDashboard = ({}) => {
                         )}
                     </ul>
                 </div>
-            </CreationDashDiv>
-        </CreationDashBody>
+
+                <button onClick={startNetworking}>Start Networking!</button>
+
+            </div>
+            <div class="container">
+            <h1>Welcome to the Host Dashboard</h1>
+                <h1>Lobby Code: {lobbyCode}</h1> {/* should autogenerate */}
+            </div>
+            <div class="container">
+            <div class="alert alert-primary" role="alert"> Wassup </div>
+            <QuestionForm />
+            </div>
+        </div>
     );
 };
-
-const CreationDashBody = styled.div`
-    height: 100vh;
-`;
-
-const CreationDashDiv = styled.div`
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-`;
 
 export default CreationDashboard;

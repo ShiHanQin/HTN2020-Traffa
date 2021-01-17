@@ -94,6 +94,12 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('setRoomDuration', (duration, lobbyCode) => {
+        const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
+
+        LobbyToModify.setDuration(duration)
+    })
+
     socket.on('userleave', (user_id, lobbyCode) => {
         // const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
         // LobbyToModify.userLeave(user_id, lobbyCode);

@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import TimePicker from 'react-times';
-// use material theme
-import 'react-times/css/material/default.css';
-// or you can use classic theme
-import 'react-times/css/classic/default.css';
+import Button from 'react-bootstrap/Button';
 
 
 const QuestionForm = () => {
@@ -15,37 +11,24 @@ const QuestionForm = () => {
     const addQuestion = () => {
         setQuestionState([...questionState, { ...blankQuestion }]);
     };
+    
 
     const handleQuestionChange = (e) => {
         const updatedQuestions = [...questionState];
         updatedQuestions[e.target.dataset.idx][e.target.className] = e.target.value;
         setQuestionState(updatedQuestions);
+        console.log(e);
     };
-
-    const submitQuestions = () => {
-        console.log("submitted");
-        console.log(questionState);
-    };
-
-    const handleFocusChange = (options) => {
-      console.log(options);
-    }
-
-    const handleTimeChange = (options) => {
-      console.log(options);
-    }
 
     return (
       <FormDiv>
-        <TimePicker theme="classic"/>
-        {/* <QuestionsDiv>
+        <QuestionsDiv>
         {questionState.map((val, idx) => {
           const promptId = `prompt-${idx}`;
-          const durationId = `duration-${idx}`;
           return (
-            <div key={`question-${idx}`}>
-              <label htmlFor={promptId}>{`Question #${idx + 1}:`}</label>
-              <input
+            <>
+              <label style={{fontSize:12}} htmlFor={promptId}>{`Prompt #${idx + 1}:`}</label>
+              <CustomTextArea
                 type="text"
                 name={promptId}
                 data-idx={idx}
@@ -54,7 +37,7 @@ const QuestionForm = () => {
                 value={questionState[idx].prompt}
                 onChange={handleQuestionChange}
               />
-              <label htmlFor={durationId}>Duration (seconds):</label>
+                            {/* <label htmlFor={durationId}>Duration (seconds):</label>
               <input
                 type="number"
                 name={durationId}
@@ -63,27 +46,48 @@ const QuestionForm = () => {
                 className="duration"
                 value={questionState[idx].duration}
                 onChange={handleQuestionChange}
-              />
-            </div>
+              /> */}
+            </>
           );
         })}
         </QuestionsDiv>
-        <input type="button" value="Add New Question" onClick={addQuestion} />
-        <input type="submit" value="Submit" onClick={submitQuestions}/> */}
+        <QuestionButtonsDiv>
+          <QuestionButton onClick={addQuestion}>Add New Question</QuestionButton>
+        </QuestionButtonsDiv>
       </FormDiv>
     );
 };
 
+const CustomTextArea = styled.textarea`
+    width: 100%;
+`
+
+const QuestionButtonsDiv = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+
+const QuestionButton = styled(Button)`
+  width: 200px;
+  margin: 20px 10px 0px 10px;
+  font-size: 0.75rem;
+`;
+
+const QuestionCard = styled.div`
+  border-radius: 12px;
+  margin: 4px;
+  padding: 4px 16px 4px 16px;
+  border: 1px solid rgba(0,0,0,.125);
+`;
+
+
 const QuestionsDiv = styled.div`
-  overflow-y: scroll;
-  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  height: calc(100vh - 220px);
 `;
 
 const FormDiv= styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
 `;
 
 export default QuestionForm;

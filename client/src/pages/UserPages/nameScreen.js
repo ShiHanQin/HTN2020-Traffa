@@ -15,6 +15,12 @@ const NameScreen = ({}) => {
        setName(value);
     };
 
+    const handleKeypress = ({key}) => {
+      if (key === 'Enter') {
+          submitName();
+      }
+    }
+
     const submitName = () => {
         const userId = context.userId.value;
         const roomCode = context.roomCode.value;
@@ -25,24 +31,27 @@ const NameScreen = ({}) => {
     const history = useHistory();
 
     return (
-        <NameScreenBody>
-            <NameScreenDiv>
+      <NameScreenBody>
+        <NameScreenDiv>
+          <RoomLabel>Room:</RoomLabel>
+          <RoomLabel>{code}</RoomLabel>
+          <NameInput
+            onKeyPress={handleKeypress}
+            onChange={handleNameChange}
+            placeholder="Choose a username!"
+          ></NameInput>
 
-                <h1>Room: {code}</h1>
-
-                <NameInput
-                    onChange={handleNameChange}
-                    placeholder="Choose a username!"
-                ></NameInput>
-
-                <LobbyButton onClick={submitName}>
-                    Enter
-                </LobbyButton> 
-
-            </NameScreenDiv>
-        </NameScreenBody>
+          <LobbyButton onClick={submitName}>Enter</LobbyButton>
+        </NameScreenDiv>
+      </NameScreenBody>
     );
 };
+
+const RoomLabel = styled.h1`
+  font-size: 2em;
+  text-align: center;
+  color: #ed7d3a;
+`;
 
 const NameInput = styled.input`
     line-height: 40px;
@@ -53,10 +62,11 @@ const NameInput = styled.input`
 `;
 
 const NameScreenBody = styled.div`
-     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #ffd7a6;
 `;
 
 const NameScreenDiv = styled.div`

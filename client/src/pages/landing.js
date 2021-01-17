@@ -13,18 +13,17 @@ import Logo from '../media/Logo.svg';
 const Landing = ({}) => {
     const [code, setCode] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [placeholder, updatePlaceholder] = useState('Enter your code here')
     const context = useContext(UserContext);
-
-    useEffect(() => {
-    }, [])  
-    
     const history = useHistory();
+
+    const handleKeypress = ({key}) => {
+      if (key === 'Enter') {
+          handleSubmitCode();
+      }
+    }
 
     const handleSubmitCode = () => {
         const userId = uuidv4().slice(0, 6).toUpperCase();
-
-        //do stuff w name
         socket.emit('userjoin', userId, code);
 
         socket.once('userJoinStatus', (status) => {
@@ -36,13 +35,10 @@ const Landing = ({}) => {
                 setErrorMessage(status.errorMessage)
             }
         });
-
-        //socket.emit(userAction, generatedUserId, generatedLobbyCode)
-        //userAction - userjoin, createLobby, etc.
     }
 
     const handleCodeChange = ({target: {value}}) => {
-        setCode(value);
+        setCode(value.toUpperCase());
     }
 
     return (
@@ -71,16 +67,21 @@ const Landing = ({}) => {
                   style={{ width: "100%", height: "100%" }}
                 />
               </div>
+              {errorMessage && 
+                <ErrorMessage>{errorMessage}</ErrorMessage>
+              }
               <CodeInput
                 onChange={handleCodeChange}
-                placeholder={placeholder}
+                onKeyPress={handleKeypress}
+                placeholder="Enter your code"
               />
-              <LandingButton onClick={handleSubmitCode}>
+              <LandingButton  onClick={handleSubmitCode}>
                 Join Lobby!
               </LandingButton>
               <LandingButton onClick={() => history.push("/creationDashboard")}>
                 Host
               </LandingButton>
+              
             </PaperCard>
           </LandingDiv>
         </LandingBody>
@@ -144,6 +145,7 @@ const PaperCard = styled.div`
 
 const ErrorMessage = styled.h3`
     color: red;
+    font-size: 14px;
 `
 
 export default Landing;

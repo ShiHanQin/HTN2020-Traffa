@@ -26,7 +26,7 @@ const createRoom = (io, users, room, endRoom, duration, questions) => {
             }
 
             // Subscribe to new room for 1-on-1 chat
-            user.socket.join(sessionId);
+            user.socket.join(room);
 
             // Pass the session Id for the Vonage Video Conference to the client
             io.to(user.socket.id).emit('joinedroom', {
@@ -38,37 +38,22 @@ const createRoom = (io, users, room, endRoom, duration, questions) => {
                 io.to(room).emit('questions', questions);
             })
 
-            const removeSocketListeners = () => {
-                user.socket.off('sendChatMsg');
-                user.socket.off('userLeave');
+            const chat = (msg) => {
+                console.log(msg)
+                user.socket.to(room).emit('receiveChatMsg', msg);
             }
 
-            const userLeave = () => {
-                removeSocketListeners()
-                endRoom(room)
-            }
-
+            // Handle chat messages
+            user.socket.on('sendChatMsg', chat)
+            
             setInterval(() => {
                 countdown--;
                 io.to(room).emit('timer', countdown);
 
                 if (countdown == 0){
                     clearInterval()
-                    userLeave()
                 }
             }, duration)
-
-            const chat = (msg) => {
-                console.log(msg)
-
-                user.socket.to(sessionId).emit('receiveChatMsg', msg);
-            }
-            
-            
-
-            // Handle chat messages
-            user.socket.on('sendChatMsg', chat)
-            user.socket.on('userLeave', userLeave)
         
         })
     }

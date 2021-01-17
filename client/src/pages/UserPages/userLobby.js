@@ -13,7 +13,6 @@ const Lobby = () => {
 
     useEffect(() => {
         socket.on('userjoined', (users) => {
-            console.log(users)
             setJoinedUsers(users);
         })
         socket.on('joinedroom', (data) => {
@@ -53,14 +52,31 @@ const Lobby = () => {
         <PaperCard className="scale-up-center">
           <Title>WELCOME TO THE LOBBY</Title>
           <Joined>{joinedUsers.length} people have joined ...</Joined>
-          <div>
+          <UserSpace>
             Fellow Participants:
-            <ul>{joinedUsers && joinedUsers.map((user) => <li>{user}</li>)}</ul>
-          </div>
+            {/* <ul> */}
+                {joinedUsers && joinedUsers.map((user) => <UserCard><p>{user}</p></UserCard>)}
+                {/* </ul> */}
+          </UserSpace>
         </PaperCard>
       </PageDiv>
     ); 
 }
+
+const UserSpace = styled.div`
+  height: 100%;
+  overflow: hidden;
+    overflow-y: auto;
+`;
+
+const UserCard = styled.div`
+  width: 150px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 
 const PageDiv = styled.div`
   display: flex;

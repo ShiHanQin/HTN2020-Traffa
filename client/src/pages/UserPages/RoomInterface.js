@@ -58,12 +58,10 @@ const RoomInterface = () => {
 
 
     return (
-        <RoomBody>
+<>
         {isReady && data ? 
             <>
-            <RoomDiv>
                     <VideoChat API_KEY={API_KEY} SESSION_ID={data.sessionId}  TOKEN={data.token} />
-            </RoomDiv>
             {isChatOpen && <RoomDiv>
                 <ChatBox />
             </RoomDiv>}
@@ -71,12 +69,11 @@ const RoomInterface = () => {
             :
             <Spinner animation="grow" />
         }
-        <div>
-            {convertTime(timeRemaining)}</div>
+        <div>{convertTime(timeRemaining)}</div>
         <ToggleChatButton onClick={() => setIsChatOpen(!isChatOpen)}>
             Toggle Chat
         </ToggleChatButton>
-        </RoomBody>
+        </>
 
     )
 }

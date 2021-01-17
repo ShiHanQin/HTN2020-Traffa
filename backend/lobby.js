@@ -105,7 +105,7 @@ class Lobby {
         }
         
         while (availableUsers.length > 0) {
-            if (availableUsers.length % 2 == 0 && availableUsers.length <= 3){
+            if (availableUsers.length % 2 == 0){
                 const randomAvailableUser = availableUsers[Math.floor(Math.random() * availableUsers.length)]
                 availableUsers = availableUsers.filter((user) => user.id !== randomAvailableUser.id);
                 const secondRandomAvailableUser = availableUsers[Math.floor(Math.random() * availableUsers.length)]
@@ -127,7 +127,7 @@ class Lobby {
                 let matches = [randomAvailableUser, secondRandomAvailableUser, thirdRandomAvailableUser];
                 let roomString = `${randomAvailableUser.id}-${secondRandomAvailableUser.id}`;
 
-                createRoom(this.io, matches, roomString, this.duration, this.questions)
+                createRoom(this.io, matches, roomString, this.endRoom, this.duration, this.questions)
                 this.activeRooms.push(roomString)
             }
         }

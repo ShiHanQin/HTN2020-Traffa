@@ -19,12 +19,15 @@ const ChatBox = () => {
         })
     }, [])
 
+    const handleKeypress = ({key}) => {
+        if (key === 'Enter') {
+            handleSend();
+        }
+    }
+
     const handleInput = ({target: {value}}) => {
         setMessage(value);
     }
-
-
-    
 
     const handleSend = () => {
         console.log(message)
@@ -44,7 +47,7 @@ const ChatBox = () => {
                     )
                 })}
             </ChatArea>
-            <ChatInput type='text' value={message} onChange={handleInput}/>
+            <ChatInput type='text' value={message} onKeyPress={handleKeypress} onChange={handleInput}/>
             <ChatButton onClick={handleSend}>Send</ChatButton>
         </>
     )

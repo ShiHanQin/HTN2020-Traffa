@@ -8,6 +8,12 @@
     text-align: center;
 }
 
+.prompt {
+  width: 90%;
+  height: 60px;
+  text-align: start;
+}
+
 /* Clear floats after the columns */
 .row:after {
   content: "";

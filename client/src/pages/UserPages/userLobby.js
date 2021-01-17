@@ -50,12 +50,13 @@ const Lobby = () => {
           background={"#FFD7A6"} /* color of background */
         />
         <PaperCard className="scale-up-center">
-          <Title>WELCOME TO THE LOBBY</Title>
+          <br/>
+          <Title>Lobby</Title>
           <Joined>{joinedUsers.length} people have joined ...</Joined>
           <UserSpace>
             Fellow Participants:
             {/* <ul> */}
-                {joinedUsers && joinedUsers.map((user) => <UserCard><p>{user}</p></UserCard>)}
+                {joinedUsers && joinedUsers.map((user) => <ul key={user}>{user}</ul>)}
                 {/* </ul> */}
           </UserSpace>
         </PaperCard>
@@ -71,7 +72,7 @@ const UserSpace = styled.div`
 
 const UserCard = styled.div`
   width: 150px;
-  height: 25px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;

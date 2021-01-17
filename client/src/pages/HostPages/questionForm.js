@@ -3,9 +3,9 @@ import styled from "styled-components";
 import Button from 'react-bootstrap/Button';
 
 
-const QuestionForm = () => {
+const QuestionForm = ({setQuestionsArr}) => {
 
-    const blankQuestion = { prompt: "", duration: "" };
+    const blankQuestion = { prompt: "" };
     const [questionState, setQuestionState] = useState([{ ...blankQuestion }]);
 
     const addQuestion = () => {
@@ -17,7 +17,7 @@ const QuestionForm = () => {
         const updatedQuestions = [...questionState];
         updatedQuestions[e.target.dataset.idx][e.target.className] = e.target.value;
         setQuestionState(updatedQuestions);
-        console.log(e);
+        setQuestionsArr(updatedQuestions);
     };
 
     return (
@@ -28,7 +28,7 @@ const QuestionForm = () => {
           return (
             <>
               <label style={{fontSize:12}} htmlFor={promptId}>{`Prompt #${idx + 1}:`}</label>
-              <CustomTextArea
+              <textarea
                 type="text"
                 name={promptId}
                 data-idx={idx}
@@ -58,9 +58,6 @@ const QuestionForm = () => {
     );
 };
 
-const CustomTextArea = styled.textarea`
-    width: 100%;
-`
 
 const QuestionButtonsDiv = styled.div`
   width: 100%;

@@ -12,29 +12,39 @@ import ChatBox from './ChatElements/chatBox'
 import VideoChat from './ChatElements/videoChat'
 
 
+const initQuestions = [];
+
 const RoomInterface = () => {
     const API_KEY = process.env.REACT_APP_OPENTOK_API_KEY;
 
+    const [data, setData] = useState()
+    const [questions, setQuestions] = useState([])
+    const [isReady, toggleIsReady] = useState(false);
+    const [questionsIndex, setQuestionsIndex] = useState(0);
     const context = useContext(UserContext);
 
-    const [data, setData] = useState()
-    const [timeRemaining, setTimeRemaining] = useState();
-    const [isReady, toggleIsReady] = useState(false);
+    const questionLeft = () => {
+        if (questionsIndex === 0) {
+        } else {
+            setQuestionsIndex(questionsIndex - 1);
+        }
+    }
+
+    const questionRight = () => {
+        if (questionsIndex === questions.length - 1) {
+        } else {
+            setQuestionsIndex(questionsIndex + 1);
+        }
+    }
 
     const [isChatOpen, setIsChatOpen] = useState(true);
 
-    const convertTime = (milliseconds) => {
-        let time = moment.duration(milliseconds);
-        return `${time.minutes()}:${time.seconds()}`
-    }
-
     useEffect(() => {
         socket.on('questions', (questions) => {
-            console.log(questions);
-        })
-
-        socket.on('timer', (countdown) => {
-            setTimeRemaining(countdown);
+            console.log(questions)
+            if(questions){
+                setQuestions(questions)
+            }
         })
 
         socket.emit('ready')
@@ -53,30 +63,81 @@ const RoomInterface = () => {
 
     useEffect(() => {
         socket.emit('reconnect', context.userId.value, context.roomCode.value)
-
+        console.log(questions);
     }, [])
 
 
     return (
 <>
         {isReady && data ? 
-            <>
+            <PageDiv>
                     <VideoChat API_KEY={API_KEY} SESSION_ID={data.sessionId}  TOKEN={data.token} />
-            {isChatOpen && <RoomDiv>
+                    <PromptDiv>
+                        <PromptFlex>
+                            <DirectionButton onClick={questionLeft}>{"<-"}</DirectionButton>
+                            {questions.length !== 0 ? questions[questionsIndex].prompt : "No prompts given."}
+                            <DirectionButton onClick={questionRight}>{"->"}</DirectionButton>
+                        </PromptFlex>
+                    </PromptDiv>
+            {/* {isChatOpen && <RoomDiv>
                 <ChatBox />
-            </RoomDiv>}
-            </>
+            </RoomDiv>} */}
+            </PageDiv>
             :
             <Spinner animation="grow" />
         }
-        <div>{convertTime(timeRemaining)}</div>
-        <ToggleChatButton onClick={() => setIsChatOpen(!isChatOpen)}>
+        {/* <div>{convertTime(timeRemaining)}</div> */}
+        {/* <ToggleChatButton onClick={() => setIsChatOpen(!isChatOpen)}>
             Toggle Chat
-        </ToggleChatButton>
+        </ToggleChatButton> */}
+        
         </>
 
     )
 }
+
+const DirectionButton = styled.button`
+    margin-top: auto;
+    margin-bottom: auto; 
+    width: 60px;
+    border-radius: 20px;
+    background-color: #ff8f00;
+    border: none;
+    outline: none;
+    color: white;
+    height: 40px;
+    margin: 8px;
+    transition: none;
+    }
+    
+    :focus {
+        outline: none;
+        background-color: #ff8f00;
+    } 
+
+    
+`;
+
+const PageDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+`;
+
+const PromptDiv = styled.div`
+    height: 10vh;
+    width: 100%;
+    background: #FFD7A6;
+`;
+
+const PromptFlex = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+`;
 
 const ToggleChatButton = styled(Button)`
     height: 20px;

@@ -114,7 +114,7 @@ class Lobby {
                 let matches = [randomAvailableUser, secondRandomAvailableUser];
                 let roomString = `${randomAvailableUser.id}-${secondRandomAvailableUser.id}`;
 
-                createRoom(this.io, matches, roomString)
+                createRoom(this.io, matches, roomString, this.endRoom, this.duration, this.questions)
                 this.activeRooms.push(roomString)
             } else {
                 const randomAvailableUser = availableUsers[Math.floor(Math.random() * availableUsers.length)];

@@ -125,6 +125,7 @@ io.on('connection', (socket) => {
 
     socket.on('setQuestions', (questions, lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
+        console.log(questions)
 
         if (!LobbyToModify) {
             console.log(`Lobby with specified code ${lobbyCode} does not exist!`)

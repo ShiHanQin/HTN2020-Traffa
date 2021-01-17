@@ -16,8 +16,8 @@ import Settings from '../../media/settings.svg'
 const CreationDashboard = ({}) => {
     const [questionsArr, setQuestionsArr] = useState([])
     const [lobbyCode, setLobbyCode] = useState(uuidv4().slice(0, 6).toUpperCase())
-    const [roomDuration, setRoomDuration] = useState(5)
-    const [joinedUsers, setJoinedUsers] = useState(['test', 'test'])
+    const [roomDuration, setRoomDuration] = useState(300)
+    const [joinedUsers, setJoinedUsers] = useState([])
 
     const handleDurationChange = ({ target: { value } }) => {
         setRoomDuration(value);
@@ -35,11 +35,17 @@ const CreationDashboard = ({}) => {
     }, [lobbyCode])
 
     const startNetworking = () => {
+        socket.emit('setQuestions', questionsArr, lobbyCode)
+
         socket.emit('startapp', lobbyCode)
     }
 
     const setDuration = () => {
         socket.emit('setRoomDuration', roomDuration)
+    }
+
+    const handleSetQuestions = (questions) => {
+        setQuestionsArr(questions)
     }
 
     const handleSaveOptions = () => {
@@ -137,7 +143,7 @@ const CreationDashboard = ({}) => {
                                 </CardImageWrapper>
                                 <CardHeader style={{'margin-left': '10px'}}>Question Prompts</CardHeader>
                                 <CardBody>
-                                    <QuestionForm />
+                                    <QuestionForm setQuestionsArr={handleSetQuestions}/>
                                 </CardBody>
                             </div>
                         </SectionCard>

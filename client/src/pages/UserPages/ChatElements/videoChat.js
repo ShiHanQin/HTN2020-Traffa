@@ -6,14 +6,13 @@ import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 
 const VideoChat = ({API_KEY, SESSION_ID, TOKEN}) => {
     const [error, setError] = useState();
-    
 
     const publisherEventHandlers = {
         streamCreated: event => {
-          console.log('Publisher stream yay');
+          console.log('Publisher stream created!');
         },
         streamDestroyed: event => {
-          console.log('Publisher stream boom');
+          console.log('Publisher stream destroyed!');
         }
     };
 
@@ -40,14 +39,16 @@ const VideoChat = ({API_KEY, SESSION_ID, TOKEN}) => {
                         <OTSubscriber
                         properties={{
                             width: '100vw',
-                            height: '100vh', 
-                            
+                            height: '90vh', 
+                         
                         }}
+                        eventHandlers={subscriberEventHandlers}
                         onError={(err) => setError(err)}/>
                     </OTStreams>
                     </VideoChatSub>
                     <VideoChatPub>
                     <OTPublisher
+                    eventHandlers={publisherEventHandlers}
                     properties={{
                         width: '100%',
                         height: '20vh',
@@ -66,11 +67,11 @@ const ErrorMessage = styled.h1`
 `;
 
 const VideoChatBody = styled.div`
-    height: 100vh;
+    height: 90vh;
 `;
 
 const VideoChatSub = styled.div`
-    height: 100vh;
+    height: 90vh;
     width: 100%;
     position: relative;
 `;
@@ -89,7 +90,7 @@ const VideoChatDiv = styled.div`
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
 `;
 

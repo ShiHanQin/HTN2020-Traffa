@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { initializeSession } from '../videoComponent/videoSession'
 import { OTSession, OTPublisher, OTStreams, OTSubscriber } from 'opentok-react';
 
 
@@ -41,12 +40,15 @@ const VideoChat = ({API_KEY, SESSION_ID, TOKEN}) => {
                 eventHandlers={publisherEventHandlers}>
                     <OTPublisher
                     properties={{
-                        width: '400px',
-                        height: 300
+                        width: '100vw',
+                        height: '100vh',
                     }}/>
                     <OTStreams onError={(err) => setError(err)}>
                         <OTSubscriber
-                        properties={{}}
+                        properties={{
+                            width: '100vw',
+                            height: '100vh'
+                        }}
                         eventHandlers={subscriberEventHandlers}
                         onError={(err) => setError(err)}/>
                     </OTStreams>
@@ -71,6 +73,7 @@ const VideoChatDiv = styled.div`
     flex-direction: column;
     justify-content: center;
     height: 100%;
+    margin-left: 50vw;
 `;
 
 export default VideoChat;

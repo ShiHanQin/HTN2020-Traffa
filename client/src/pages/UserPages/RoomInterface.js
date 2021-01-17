@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
+import moment from 'moment'
 
 import { UserContext } from '../../context/user';
 
@@ -17,18 +18,26 @@ const RoomInterface = () => {
     const context = useContext(UserContext);
 
     const [data, setData] = useState()
+    const [timeRemaining, setTimeRemaining] = useState();
     const [isReady, toggleIsReady] = useState(false);
 
     const [isChatOpen, setIsChatOpen] = useState(true);
 
+    const convertTime = (milliseconds) => {
+        let time = moment.duration(milliseconds);
+        return `${time.minutes()}:${time.seconds()}`
+    }
 
     useEffect(() => {
-        // socket.on('joinedroom', (data) => {
-        //     console.log(data)
+        socket.on('questions', (questions) => {
+            console.log(questions);
+        })
 
-        //     setData(data)
-        // })
-        console.log(API_KEY)
+        socket.on('timer', (countdown) => {
+            setTimeRemaining(countdown);
+        })
+
+        socket.emit('ready')
 
         if (!context.sessionId.value || !context.token.value) {
             console.log("GRIEFFFFF!");
@@ -41,6 +50,11 @@ const RoomInterface = () => {
 
         toggleIsReady(true)
     }, [API_KEY, context.sessionId.value, context.token.value]);
+
+    useEffect(() => {
+        socket.emit('reconnect', context.userId.value, context.roomCode.value)
+
+    }, [])
 
 
     return (
@@ -57,6 +71,8 @@ const RoomInterface = () => {
             :
             <Spinner animation="grow" />
         }
+        <div>
+            {convertTime(timeRemaining)}</div>
         <ToggleChatButton onClick={() => setIsChatOpen(!isChatOpen)}>
             Toggle Chat
         </ToggleChatButton>

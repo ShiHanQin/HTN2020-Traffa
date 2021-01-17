@@ -5,9 +5,14 @@ class Lobby {
         this.io = io;
         this.lobbyCode = lobbyCode;
         this.duration;
+        this.questions = []
         this.userInLobby = [];
         this.usersInWaitingArea = [];
         this.activeRooms = [];
+
+        this.updateSocket = this.updateSocket.bind(this);
+
+        this.setQuestions = this.setQuestions.bind(this);
 
         this.setDuration = this.setDuration.bind(this);
         this.getNumberOfUsers = this.getNumberOfUsers.bind(this);
@@ -17,6 +22,9 @@ class Lobby {
         this.isUserInLobby = this.isUserInLobby.bind(this);
         this.getUsersInLobby = this.getUsersInLobby.bind(this);
         this.endLobby = this.endLobby.bind(this);
+    
+        // All methods for rooms
+        this.getRooms = this.getRooms.bind(this);
         this.createRooms = this.createRooms.bind(this);
         this.endRoom = this.endRoom.bind(this);
     }
@@ -46,6 +54,12 @@ class Lobby {
 
     getLobbyCode = () => {
         return this.lobbyCode;
+    }
+
+    updateSocket = (user_id, socket) => {
+        const user = this.userInLobby.find(element => (element.id === user_id));
+
+        user.socket = socket;
     }
 
     addUserToLobby = (io, user_id, socket) => {
@@ -78,6 +92,10 @@ class Lobby {
 
         return nickUsers;
     }
+
+    setQuestions = (questions) => {
+        this.questions = questions;
+    }
     
     createRooms = () => {
         let availableUsers = this.usersInWaitingArea;
@@ -109,7 +127,7 @@ class Lobby {
                 let matches = [randomAvailableUser, secondRandomAvailableUser, thirdRandomAvailableUser];
                 let roomString = `${randomAvailableUser.id}-${secondRandomAvailableUser.id}`;
 
-                createRoom(this.io, matches, roomString, this.duration)
+                createRoom(this.io, matches, roomString, this.duration, this.questions)
                 this.activeRooms.push(roomString)
             }
         }
@@ -120,6 +138,11 @@ class Lobby {
         let index = this.usersInWaitingArea.findIndex(element => (element === this.usersInWaitingArea[i].user_id)); 
         this.userInLobby.splice(index, 1);
     }
+
+    getRooms = () => {
+        return this.activeRooms;
+    }
+
     endRooms = () => {
         this.io.to(this.lobbyCode).emit('closerooms')
     }

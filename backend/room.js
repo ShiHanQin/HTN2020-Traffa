@@ -2,8 +2,15 @@ const OpenTok = require('opentok');
 const { OPENTOK_API_KEY, OPENTOK_API_SECRET } = process.env; 
 const opentok = new OpenTok(OPENTOK_API_KEY, OPENTOK_API_SECRET);
 
-const createRoom = (io, users, room, endRoom, duration) => {
+const createRoom = (io, users, room, endRoom, duration, questions) => {
     let sessionId, token;
+    let countdown;
+    if (!duration){
+        countdown = 300000;
+    } else {
+        countdown = duration;
+    }
+    
 
     const sendToUser = () => {
         users.forEach((user, index) => {
@@ -27,12 +34,10 @@ const createRoom = (io, users, room, endRoom, duration) => {
                 token: token,
             });
 
-            const chat = (msg) => {
-                console.log(msg)
+            user.socket.on('ready', () => {
+                io.to(room).emit('questions', questions);
+            })
 
-                user.socket.to(sessionId).emit('receiveChatMsg', msg);
-            }
-            
             const removeSocketListeners = () => {
                 user.socket.off('sendChatMsg');
                 user.socket.off('userLeave');
@@ -42,6 +47,24 @@ const createRoom = (io, users, room, endRoom, duration) => {
                 removeSocketListeners()
                 endRoom(room)
             }
+
+            setInterval(() => {
+                countdown--;
+                io.to(room).emit('timer', countdown);
+
+                if (countdown == 0){
+                    clearInterval()
+                    userLeave()
+                }
+            }, duration)
+
+            const chat = (msg) => {
+                console.log(msg)
+
+                user.socket.to(sessionId).emit('receiveChatMsg', msg);
+            }
+            
+            
 
             // Handle chat messages
             user.socket.on('sendChatMsg', chat)
@@ -68,5 +91,8 @@ const createRoom = (io, users, room, endRoom, duration) => {
 
     return true;
 }
+
+
+
 
 module.exports = { createRoom };

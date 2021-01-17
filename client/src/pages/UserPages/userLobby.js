@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from 'react-router-dom';
 import { socket } from '../../utils/index'
 import { UserContext } from '../../context/user';
-import { Spinner } from 'react-bootstrap'
+import styled from "styled-components";
+import Sky from "react-sky";
+import img0 from "../../media/online-lesson.svg";
 
 const Lobby = () => {
     const [joinedUsers, setJoinedUsers] = useState([])
@@ -35,19 +37,60 @@ const Lobby = () => {
     }, [])
 
     return (
-        <div>
-            <h1>Welcome to the Lobby, we will begin soon! :)</h1>
+      <PageDiv>
+        <Sky
+          style={{ order: "-1", position: "absolute" }}
+          images={{
+            0: img0,
+          }}
+          how={
+            80
+          } /* Pass the number of images Sky will render chosing randomly */
+          time={15} /* time of animation */
+          size={"120px"} /* size of the rendered images */
+          background={"#FFD7A6"} /* color of background */
+        />
+        <PaperCard className="scale-up-center">
+          <Title>WELCOME TO THE LOBBY</Title>
+          <Joined>{joinedUsers.length} people have joined ...</Joined>
+          <div>
+            Fellow Participants:
+            <ul>{joinedUsers && joinedUsers.map((user) => <li>{user}</li>)}</ul>
+          </div>
+        </PaperCard>
+      </PageDiv>
+    ); 
+}
 
-            <h1>{joinedUsers.length} have joined ...</h1>
+const PageDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
 
-            <div>
-            {/* <Spinner animation="grow" /> */}
-                Users Currently Joined:
-                
-                <ul>{joinedUsers && joinedUsers.map((user) => <li>{user}</li>)}</ul>
-            </      div>
-        </div>        
-        ); 
-    }
+const Title = styled.h1`
+  font-size: 2em;
+  text-align: center;
+  color: black;
+`;
+
+const Joined = styled.h1`
+  font-size: 1.5em;
+  text-align: center;
+  color: orange;
+`;
+
+const PaperCard = styled.div`
+  background-color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 400px;
+  height: 500px;
+  border-radius: 10px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+`;
 
 export default Lobby;      

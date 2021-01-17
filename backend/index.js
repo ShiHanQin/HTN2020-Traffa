@@ -32,19 +32,37 @@ io.on('connection', (socket) => {
     // Pair all users in lobby and start networking
     socket.on('startapp', (lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
-        LobbyToModify.createRooms();
+
+        if (!LobbyToModify) {
+            console.log(`Lobby with specified code ${lobbyCode} does not exist!`)
+            io.to(socket.id).emit('userJoinStatus', {errorMessage: 'Room does not exist!', error: true})
+        } else {
+            LobbyToModify.createRooms();
+        }
     })
 
     // End all active 1on1 rooms (Pushes all users back to waiting area)
     socket.on('endrooms', (lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
-        LobbyToModify.endRooms();
+
+        if (!LobbyToModify) {
+            console.log(`Lobby with specified code ${lobbyCode} does not exist!`)
+            io.to(socket.id).emit('userJoinStatus', {errorMessage: 'Room does not exist!', error: true})
+        } else {
+            LobbyToModify.endRooms();
+        }
     })
 
     // Close lobby
     socket.on('endlobby', (lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
-        LobbyToModify.endLobby();
+
+        if (!LobbyToModify) {
+            console.log(`Lobby with specified code ${lobbyCode} does not exist!`)
+            io.to(socket.id).emit('userJoinStatus', {errorMessage: 'Room does not exist!', error: true})
+        } else {
+            LobbyToModify.endLobby();
+        }
     })
 
     
@@ -79,8 +97,14 @@ io.on('connection', (socket) => {
     // Allow user to change nickname stored
     socket.on('chooseName', (user_id, nickname, lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
-        LobbyToModify.modifyNickname(user_id, nickname);
-        io.to(lobbyCode).emit('userjoined', LobbyToModify.getUsersInLobby())
+
+        if (!LobbyToModify) {
+            console.log(`Lobby with specified code ${lobbyCode} does not exist!`)
+            io.to(socket.id).emit('userJoinStatus', {errorMessage: 'Room does not exist!', error: true})
+        } else {
+            LobbyToModify.modifyNickname(user_id, nickname);
+            io.to(lobbyCode).emit('userjoined', LobbyToModify.getUsersInLobby())
+        }
 
     });
 
@@ -89,15 +113,36 @@ io.on('connection', (socket) => {
         
         if (LobbyToModify && LobbyToModify.isUserInLobby(user_id)){
             socket.join(lobbyCode)
+            LobbyToModify.updateSocket(user_id, socket)
             io.to(lobbyCode).emit('userjoined', LobbyToModify.getUsersInLobby())
 
+            const inRoom = LobbyToModify.getRooms().find((room) => room.includes(user_id));
+            if (inRoom) {
+                socket.join(inRoom)
+            }
+        }
+    })
+
+    socket.on('setQuestions', (questions, lobbyCode) => {
+        const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
+
+        if (!LobbyToModify) {
+            console.log(`Lobby with specified code ${lobbyCode} does not exist!`)
+            io.to(socket.id).emit('userJoinStatus', {errorMessage: 'Room does not exist!', error: true})
+        } else {
+            LobbyToModify.setQuestions(questions);
         }
     })
 
     socket.on('setRoomDuration', (duration, lobbyCode) => {
         const LobbyToModify = lobbies.find((lobby) => lobby.getLobbyCode() === lobbyCode);
 
-        LobbyToModify.setDuration(duration)
+        if (!LobbyToModify) {
+            console.log(`Lobby with specified code ${lobbyCode} does not exist!`)
+            io.to(socket.id).emit('userJoinStatus', {errorMessage: 'Room does not exist!', error: true})
+        } else {
+            LobbyToModify.setDuration(duration);
+        }
     })
 
     socket.on('userleave', (user_id, lobbyCode) => {

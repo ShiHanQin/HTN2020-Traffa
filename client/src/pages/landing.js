@@ -55,28 +55,29 @@ const Landing = ({}) => {
                 0: img0,
                 1: img1,
                 2: img2,
-                //3: img3
               }}
               how={
                 150
               } /* Pass the number of images Sky will render chosing randomly */
               time={30} /* time of animation */
               size={"75px"} /* size of the rendered images */
-              background={"#2C2B27"} /* color of background */
+              background={"#FFD7A6"} /* color of background */
             />
             <PaperCard className="scale-up-center">
-                <div style={{width: '200px', height: '200px'}}>
-                    <img
-                        src={Logo}
-                        alt="Logo"
-                        style={{width: '100%', height: '100%'}}
-                    />
-                </div>
+              <div style={{ width: "200px", height: "200px" }}>
+                <img
+                  src={Logo}
+                  alt="Logo"
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </div>
               <CodeInput
                 onChange={handleCodeChange}
                 placeholder={placeholder}
               />
-              <LandingButton onClick={handleSubmitCode}>Join Lobby!</LandingButton>
+              <LandingButton onClick={handleSubmitCode}>
+                Join Lobby!
+              </LandingButton>
               <LandingButton onClick={() => history.push("/creationDashboard")}>
                 Host
               </LandingButton>
@@ -87,8 +88,6 @@ const Landing = ({}) => {
     );
 };
 
-
-
 const CodeInput = styled.input`
     line-height: 40px;
     width: 80%;
@@ -96,7 +95,6 @@ const CodeInput = styled.input`
     border-radius: 12px;
     border-width: 1px;
 `;
-
 
 const LandingButton = styled.button`
     color: white;
@@ -116,7 +114,6 @@ const LandingButton = styled.button`
     :hover {
         opacity: 50%;
     }
-
 `;
 
 const LandingBody = styled.div`

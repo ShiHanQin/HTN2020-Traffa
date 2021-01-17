@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import TimePicker from 'react-times';
+// use material theme
+import 'react-times/css/material/default.css';
+// or you can use classic theme
+import 'react-times/css/classic/default.css';
+
 
 const QuestionForm = () => {
 
@@ -21,8 +27,18 @@ const QuestionForm = () => {
         console.log(questionState);
     };
 
+    const handleFocusChange = (options) => {
+      console.log(options);
+    }
+
+    const handleTimeChange = (options) => {
+      console.log(options);
+    }
+
     return (
       <FormDiv>
+        <TimePicker theme="classic"/>
+        {/* <QuestionsDiv>
         {questionState.map((val, idx) => {
           const promptId = `prompt-${idx}`;
           const durationId = `duration-${idx}`;
@@ -51,18 +67,23 @@ const QuestionForm = () => {
             </div>
           );
         })}
+        </QuestionsDiv>
         <input type="button" value="Add New Question" onClick={addQuestion} />
-        <input type="submit" value="Submit" onClick={submitQuestions}/>
+        <input type="submit" value="Submit" onClick={submitQuestions}/> */}
       </FormDiv>
     );
 };
 
+const QuestionsDiv = styled.div`
+  overflow-y: scroll;
+  max-height: calc(100vh - 140px);
+`;
+
 const FormDiv= styled.div`
-display: flex;
-align-items: center;
-flex-direction: column;
-justify-content: center;
-height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 export default QuestionForm;

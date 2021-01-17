@@ -8,8 +8,7 @@ import Sky from "react-sky";
 import img0 from "../media/dialogue.svg";
 import img1 from "../media/chat.svg";
 import img2 from '../media/smartphone.svg';
-import img3 from '../media/ericlogosvg.svg';
-import Logo from '../media/logo.png';
+import Logo from '../media/Logo.svg';
 
 const Landing = ({}) => {
     const [code, setCode] = useState('');
@@ -56,7 +55,7 @@ const Landing = ({}) => {
                 0: img0,
                 1: img1,
                 2: img2,
-                3: img3
+                //3: img3
               }}
               how={
                 150
@@ -66,17 +65,21 @@ const Landing = ({}) => {
               background={"#2C2B27"} /* color of background */
             />
             <PaperCard className="scale-up-center">
-              <img src={Logo} alt="Logo" />
+                <div style={{width: '200px', height: '200px'}}>
+                    <img
+                        src={Logo}
+                        alt="Logo"
+                        style={{width: '100%', height: '100%'}}
+                    />
+                </div>
               <CodeInput
                 onChange={handleCodeChange}
                 placeholder={placeholder}
-                onFocus={() => updatePlaceholder('')}
-                onBlur={() => updatePlaceholder('Enter your code here')}
               />
-                <LandingButton onClick={() => history.push('/creationDashboard')}>Host</LandingButton>
-              <LandingButton onClick={handleSubmitCode}>Enter</LandingButton>
-              <div>Host your own Traffa!</div>
-              <ErrorMessage>{errorMessage && errorMessage}</ErrorMessage>
+              <LandingButton onClick={handleSubmitCode}>Join Lobby!</LandingButton>
+              <LandingButton onClick={() => history.push("/creationDashboard")}>
+                Host
+              </LandingButton>
             </PaperCard>
           </LandingDiv>
         </LandingBody>

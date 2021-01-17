@@ -36,21 +36,18 @@ const CreationDashboard = ({}) => {
 
     return (
         <DashboardBody>
-            <hr/>
+        <DashboardDiv>
         <Container>
             <h1 class="lobbyhead">Lobby Code: {lobbyCode}</h1>
         </Container>
         <Container>
-            <br/>
-            <Row>
-            <Col>
             <ParticipantDisplay>
                 <h1>Users Currently Joined:</h1>
                     <ParticipantList>
                         {joinedUsers && joinedUsers.map((user) => 
                             <li>{user}</li>
                         )}
-                        <Participant>LUl</Participant>
+                        <Participant>LU1l</Participant>
                         <Participant>LUl</Participant>
                         <Participant>LUl</Participant>
                         <Participant>LUl</Participant>
@@ -82,21 +79,21 @@ const CreationDashboard = ({}) => {
                         </ParticipantList>
                 </ParticipantDisplay>
                 <Button variant="primary" onClick={startNetworking}>Start the session!</Button>{' '}
-            </Col>
 
-            <Col>
+            </Container>
+
+
             <h1>
                 Questions Prompts:
             </h1>
             <div class="card card-body">
             <QuestionForm />
             </div>
-            </Col>
-            </Row>
-            </Container>
+            </DashboardDiv>
         </DashboardBody>
     );
 };
+
 
 const ParticipantDisplay = styled.div`
     display: block;
@@ -117,6 +114,12 @@ const ParticipantList = styled(ListGroup)`
 
 const DashboardBody = styled(Container)`
 height: 100vh
+`;
+
+const DashboardDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 `;
 
 export default CreationDashboard;

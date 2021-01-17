@@ -109,7 +109,7 @@ class Lobby {
                 let matches = [randomAvailableUser, secondRandomAvailableUser, thirdRandomAvailableUser];
                 let roomString = `${randomAvailableUser.id}-${secondRandomAvailableUser.id}`;
 
-                createRoom(this.io, matches, roomString)
+                createRoom(this.io, matches, roomString, this.duration)
                 this.activeRooms.push(roomString)
             }
         }

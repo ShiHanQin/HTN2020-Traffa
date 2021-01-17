@@ -2,7 +2,7 @@ const OpenTok = require('opentok');
 const { OPENTOK_API_KEY, OPENTOK_API_SECRET } = process.env; 
 const opentok = new OpenTok(OPENTOK_API_KEY, OPENTOK_API_SECRET);
 
-const createRoom = (io, users, room, endRoom) => {
+const createRoom = (io, users, room, endRoom, duration) => {
     let sessionId, token;
 
     const sendToUser = () => {
@@ -46,7 +46,6 @@ const createRoom = (io, users, room, endRoom) => {
             // Handle chat messages
             user.socket.on('sendChatMsg', chat)
             user.socket.on('userLeave', userLeave)
-
         
         })
     }
@@ -67,8 +66,6 @@ const createRoom = (io, users, room, endRoom) => {
         }
     })
 
-    
-    
     return true;
 }
 

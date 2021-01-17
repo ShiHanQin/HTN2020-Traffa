@@ -1,6 +1,6 @@
 # Traffa
 
-[![Watch the video](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/001/346/734/datas/gallery.jpg)](https://youtu.be/2-AxpklraRs)]
+[![Watch the video](https://imgur.com/a/6iWelAB)](https://youtu.be/2-AxpklraRs)
 
 ## Inspiration
 Having experienced the difficulties that are associated with networking in a digital age, we sought to bring a fun, collaborative, and innovative way for communities, event organizers, and friends to connect with each other! Interactions at in-person coffee chats and networking events are often spontaneous and random, so we wanted to be able to deliver that experience and value with **traffa**. Our app eradicates the barriers associated with communication and relationship building during a period of social isolation; it provides a simple and accessible way for everyone to spark and foster meaningful connections.

@@ -4,8 +4,8 @@
   align-items: center;
 }
 
-.h1 {
-    float: center;
+.lobbyhead {
+    text-align: center;
 }
 
 /* Clear floats after the columns */

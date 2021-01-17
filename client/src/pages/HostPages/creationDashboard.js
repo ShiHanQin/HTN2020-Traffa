@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { socket } from '../../utils/index'
 import { QuestionForm } from "../index";
 import { v4 as uuidv4 } from "uuid";
-import { Container } from 'react-bootstrap';
+import { Container, Col, Row} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 import './dashboard.css'
 
 const CreationDashboard = ({}) => {
@@ -34,32 +35,36 @@ const CreationDashboard = ({}) => {
     }
 
     return (
-        <div class="container">
-            
-            <div class="container">
-
-                <div>
-                    Users Currently Joined:
+        <DashboardBody>
+        <Container class="heading">
+            <h1>Lobby Code: {lobbyCode}</h1>
+        </Container>
+        <Container>
+            <Row>
+            <Col>
+            <div>
+                <h1>Users Currently Joined:</h1>
                     <ul>
                         {joinedUsers && joinedUsers.map((user) => 
                             <li>{user}</li>
                         )}
                     </ul>
                 </div>
-
-                <button onClick={startNetworking}>Start Networking!</button>
-
-            </div>
-            <div class="container">
-            <h1>Welcome to the Host Dashboard</h1>
-                <h1>Lobby Code: {lobbyCode}</h1> {/* should autogenerate */}
-            </div>
-            <div class="container">
-            <div class="alert alert-primary" role="alert"> Wassup </div>
+                <Button variant="primary" onClick={startNetworking}>Start the session!</Button>{' '}
+                <Button onClick={startNetworking}>Start Networking!</Button>
+            </Col>
+            
+            <Col>
             <QuestionForm />
-            </div>
-        </div>
+            </Col>
+            </Row>
+            </Container>
+        </DashboardBody>
     );
 };
+
+const DashboardBody = styled(Container)`
+height: 100vh
+`;
 
 export default CreationDashboard;

@@ -4,6 +4,10 @@
   align-items: center;
 }
 
+.h1 {
+    float: center;
+}
+
 /* Clear floats after the columns */
 .row:after {
   content: "";

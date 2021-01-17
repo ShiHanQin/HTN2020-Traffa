@@ -41,11 +41,14 @@ const VideoChat = ({API_KEY, SESSION_ID, TOKEN}) => {
                 eventHandlers={publisherEventHandlers}>
                     <OTPublisher
                     properties={{
-                        width: 400,
+                        width: '400px',
                         height: 300
                     }}/>
                     <OTStreams onError={(err) => setError(err)}>
-                        <OTSubscriber eventHandlers={subscriberEventHandlers} onError={(err) => setError(err)}/>
+                        <OTSubscriber
+                        properties={{}}
+                        eventHandlers={subscriberEventHandlers}
+                        onError={(err) => setError(err)}/>
                     </OTStreams>
                 </OTSession>
                 {error && <ErrorMessage>{error}</ErrorMessage>}

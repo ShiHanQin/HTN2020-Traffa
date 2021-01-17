@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { socket } from '../utils/index'
 import { useHistory, BrowserRouter as Route, Link } from "react-router-dom";
 import { UserContext } from '../context/user';
+import Sky from "react-sky";
+
+import myImage from "./media/myImage.png";
 
 const Landing = ({}) => {
     const [code, setCode] = useState('');
